@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ME Cashews — Estate-Grown Cashews from Kerala</title>
+<title>ME Cashews — Estate-Grown Cashews from Tamil Nadu</title>
 <style>
   :root{
     --soil: #2b2118;
@@ -754,10 +754,39 @@ function submitEnquiry(e){
   }
 
   var unit = enquiryMode === 'bulk' ? 'kg' : 'x 500g units';
-  alert('Thanks ' + name + '! We have received your ' + (enquiryMode === 'bulk' ? 'bulk order ' : '') + 'enquiry for ' + quantity + ' ' + unit + ' of: ' + varieties + '. We will reach out to ' + email + ' shortly.');
 
-  document.getElementById('enquiryForm').reset();
-  closeEnquiry();
+  var submitBtn = document.querySelector('#enquiryForm .pay-submit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  var formData = new FormData();
+  formData.append('Name', name);
+  formData.append('Email', email);
+  formData.append('Enquiry Type', enquiryMode === 'bulk' ? 'B2B / Bulk Order' : 'Retail Enquiry');
+  formData.append('Varieties', varieties);
+  formData.append('Quantity', quantity + ' ' + unit);
+  formData.append('_subject', (enquiryMode === 'bulk' ? 'Bulk Order' : 'New') + ' Enquiry — ME Cashews website');
+  formData.append('_template', 'table');
+  formData.append('_captcha', 'false');
+
+  fetch('https://formsubmit.co/ajax/mariaenterprises84@gmail.com', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: formData
+  })
+  .then(function(response){ return response.json(); })
+  .then(function(data){
+    alert('Thanks ' + name + '! Your enquiry has been sent. We will reach out to ' + email + ' shortly.');
+    document.getElementById('enquiryForm').reset();
+    closeEnquiry();
+  })
+  .catch(function(error){
+    alert('Sorry, something went wrong sending your enquiry. Please try again or email us directly at mariaenterprises84@gmail.com.');
+  })
+  .finally(function(){
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Enquiry';
+  });
 }
 </script>
 </body>
