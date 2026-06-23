@@ -187,6 +187,56 @@
   }
 
   .nav-cta{ position:relative; cursor:pointer; font-family: var(--mono); }
+  .cart-badge{
+    position:absolute; top:-8px; right:-8px; background: var(--soil); color: var(--cream);
+    font-size: 0.62rem; font-weight: 700; border-radius: 50%; min-width: 18px; height: 18px;
+    display:flex; align-items:center; justify-content:center; padding: 0 4px;
+  }
+  .qty-stepper{
+    display:flex; align-items:center; justify-content:center; gap: 14px;
+    margin-top: 16px; border: 1px solid var(--line); border-radius: 100px; padding: 6px 10px; width: fit-content; margin-left:auto; margin-right:auto;
+  }
+  .qty-btn{
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold); background: var(--paper);
+    color: var(--soil); font-size: 1rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-family: var(--mono);
+  }
+  .qty-btn:hover{ background: var(--gold); color: var(--paper); }
+  .qty-display{ font-family: var(--mono); font-size: 0.95rem; min-width: 18px; text-align:center; }
+  .add-cart-btn{ width: 100%; justify-content:center; margin-top: 18px; border: none; cursor:pointer; }
+  .cart-drawer{
+    position:fixed; top:0; right:-420px; width: 100%; max-width: 400px; height:100%; background: var(--paper);
+    z-index: 201; box-shadow: -10px 0 30px rgba(0,0,0,0.2); transition: right 0.35s ease;
+    display:flex; flex-direction:column;
+  }
+  .cart-drawer.open{ right:0; }
+  .cart-drawer-head{
+    display:flex; align-items:center; justify-content:space-between; padding: 24px 24px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cart-drawer-head h3{ font-family: var(--display); text-transform: uppercase; font-size: 1.3rem; color: var(--soil); }
+  .cart-items{ flex: 1; overflow-y:auto; padding: 18px 24px; }
+  .cart-empty{ color: var(--bark); font-size: 0.92rem; text-align:center; margin-top: 40px; }
+  .cart-item{
+    display:grid; grid-template-columns: 1fr auto auto auto; align-items:center; gap: 10px;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+  }
+  .cart-item-name{ font-family: var(--display); font-weight:700; font-size: 0.92rem; text-transform: uppercase; }
+  .cart-item-price{ font-family: var(--mono); font-size: 0.7rem; color: var(--husk); margin-top: 2px; }
+  .cart-item-controls{ display:flex; align-items:center; gap: 8px; }
+  .cart-item-total{ font-family: var(--display); font-weight: 700; font-size: 0.9rem; min-width: 50px; text-align:right; }
+  .cart-remove{ background:none; border:none; color: var(--husk); font-size: 1.3rem; cursor:pointer; line-height:1; }
+  .cart-remove:hover{ color: var(--soil); }
+  .cart-footer{ padding: 20px 24px 26px; border-top: 1px solid var(--line); }
+  .cart-total-row{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 16px;
+    font-family: var(--display); font-weight: 700; font-size: 1.1rem; text-transform: uppercase;
+  }
+  .cart-checkout{ width:100%; justify-content:center; text-align:center; border:none; cursor:pointer; }
+  .pay-amount-row{
+    display:flex; justify-content:space-between; font-family: var(--display); font-weight: 700;
+    font-size: 1.1rem; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 18px;
+  }
 
   /* ---------- Enquiry modal ---------- */
   .cart-overlay{
@@ -356,7 +406,7 @@
       <a href="#process">Process</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button type="button" class="nav-cta" onclick="openEnquiry('retail')">Enquire Now</button>
+    <button type="button" class="nav-cta" onclick="toggleCart(true)">My Cart <span class="cart-badge" id="cartBadge">0</span></button>
   </div>
 </header>
 
@@ -418,6 +468,12 @@
         <h3>Jumbo Whole</h3>
         <p>Our largest kernel, ideal for gifting and gourmet snacking. Rich, buttery, unmistakably premium.</p>
         <div class="price-row"><span class="price">₹600</span><span class="per">per 500g</span></div>
+        <div class="qty-stepper">
+          <button type="button" class="qty-btn" onclick="changeQty('Jumbo_Whole',-1)">−</button>
+          <span class="qty-display" id="qty_Jumbo_Whole">1</span>
+          <button type="button" class="qty-btn" onclick="changeQty('Jumbo_Whole',1)">+</button>
+        </div>
+        <button type="button" class="btn btn-gold add-cart-btn" onclick="addToCart('Jumbo Whole',600,'Jumbo_Whole')">Add to Cart</button>
       </div>
       <div class="product-card">
         <span class="grade-num">GRADE — W240</span>
@@ -425,6 +481,12 @@
         <h3>Premium Whole</h3>
         <p>Our most-ordered grade — a daily-use kernel with consistent size and a clean, nutty bite.</p>
         <div class="price-row"><span class="price">₹450</span><span class="per">per 500g</span></div>
+        <div class="qty-stepper">
+          <button type="button" class="qty-btn" onclick="changeQty('Premium_Whole',-1)">−</button>
+          <span class="qty-display" id="qty_Premium_Whole">1</span>
+          <button type="button" class="qty-btn" onclick="changeQty('Premium_Whole',1)">+</button>
+        </div>
+        <button type="button" class="btn btn-gold add-cart-btn" onclick="addToCart('Premium Whole',450,'Premium_Whole')">Add to Cart</button>
       </div>
       <div class="product-card">
         <span class="grade-num">GRADE — W320</span>
@@ -432,6 +494,12 @@
         <h3>Natural Whole</h3>
         <p>100% natural, no polish. A smaller kernel, full flavour — our best value for everyday cooking.</p>
         <div class="price-row"><span class="price">₹400</span><span class="per">per 500g</span></div>
+        <div class="qty-stepper">
+          <button type="button" class="qty-btn" onclick="changeQty('Natural_Whole',-1)">−</button>
+          <span class="qty-display" id="qty_Natural_Whole">1</span>
+          <button type="button" class="qty-btn" onclick="changeQty('Natural_Whole',1)">+</button>
+        </div>
+        <button type="button" class="btn btn-gold add-cart-btn" onclick="addToCart('Natural Whole',400,'Natural_Whole')">Add to Cart</button>
       </div>
       <div class="product-card">
         <span class="grade-num">GRADE — BB</span>
@@ -439,6 +507,12 @@
         <h3>Broken Pieces</h3>
         <p>Same kernel, same farm — broken in handling. Perfect for chutneys, baking and curries.</p>
         <div class="price-row"><span class="price">₹280</span><span class="per">per 500g</span></div>
+        <div class="qty-stepper">
+          <button type="button" class="qty-btn" onclick="changeQty('Broken_Pieces',-1)">−</button>
+          <span class="qty-display" id="qty_Broken_Pieces">1</span>
+          <button type="button" class="qty-btn" onclick="changeQty('Broken_Pieces',1)">+</button>
+        </div>
+        <button type="button" class="btn btn-gold add-cart-btn" onclick="addToCart('Broken Pieces',280,'Broken_Pieces')">Add to Cart</button>
       </div>
     </div>
   </div>
@@ -685,6 +759,37 @@
   </div>
 </div>
 
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart(false)"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer-head">
+    <h3>Your Cart</h3>
+    <button type="button" class="cart-close" onclick="toggleCart(false)">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="cart-empty" id="cartEmpty">Your cart is empty.</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Subtotal</span>
+      <span id="cartSubtotal">₹0</span>
+    </div>
+    <button type="button" class="btn btn-gold cart-checkout" onclick="openCheckout()">Checkout</button>
+  </div>
+</aside>
+
+<div class="pay-overlay" id="payOverlay" onclick="closeCheckoutOnBg(event)">
+  <div class="pay-modal">
+    <button type="button" class="cart-close pay-close" onclick="closeCheckout()">&times;</button>
+    <h3>Payment</h3>
+    <div class="pay-amount-row">
+      <span>Amount to pay</span>
+      <span id="payAmount">₹0</span>
+    </div>
+    <p class="qty-hint" style="margin-top:0; margin-bottom:18px; text-align:center;">You'll be taken to our secure Razorpay payment page to complete this purchase.</p>
+    <button type="button" class="btn btn-gold pay-submit" onclick="completePayment()">Pay with Razorpay</button>
+  </div>
+</div>
+
 <script>
 (function(){
   var slides = document.querySelectorAll('.bowl-visual .slide');
@@ -696,6 +801,123 @@
     slides[i].classList.add('active');
   }, 1000);
 })();
+
+// ---- Cart logic ----
+var qtyState = {};
+var cart = {};
+
+function changeQty(id, delta){
+  var current = qtyState[id] || 1;
+  current = Math.max(1, current + delta);
+  qtyState[id] = current;
+  document.getElementById('qty_' + id).textContent = current;
+}
+
+function addToCart(name, price, id){
+  var qty = qtyState[id] || 1;
+  if(cart[name]){
+    cart[name].qty += qty;
+  } else {
+    cart[name] = { name: name, price: price, qty: qty };
+  }
+  renderCart();
+  qtyState[id] = 1;
+  document.getElementById('qty_' + id).textContent = 1;
+  toggleCart(true);
+}
+
+function removeFromCart(name){
+  delete cart[name];
+  renderCart();
+}
+
+function changeCartQty(name, delta){
+  if(!cart[name]) return;
+  cart[name].qty = Math.max(1, cart[name].qty + delta);
+  renderCart();
+}
+
+function renderCart(){
+  var itemsEl = document.getElementById('cartItems');
+  var subtotalEl = document.getElementById('cartSubtotal');
+  var badgeEl = document.getElementById('cartBadge');
+
+  var names = Object.keys(cart);
+  var totalQty = 0;
+  var subtotal = 0;
+
+  if(names.length === 0){
+    itemsEl.innerHTML = '<p class="cart-empty">Your cart is empty.</p>';
+    subtotalEl.textContent = '₹0';
+    badgeEl.textContent = '0';
+    return;
+  }
+
+  var html = '';
+  names.forEach(function(name){
+    var item = cart[name];
+    var lineTotal = item.price * item.qty;
+    subtotal += lineTotal;
+    totalQty += item.qty;
+    html += '' +
+      '<div class="cart-item">' +
+        '<div class="cart-item-info">' +
+          '<div class="cart-item-name">' + item.name + '</div>' +
+          '<div class="cart-item-price">₹' + item.price + ' per 500g</div>' +
+        '</div>' +
+        '<div class="cart-item-controls">' +
+          '<button type="button" class="qty-btn" onclick="changeCartQty(\'' + name + '\',-1)">−</button>' +
+          '<span class="qty-display">' + item.qty + '</span>' +
+          '<button type="button" class="qty-btn" onclick="changeCartQty(\'' + name + '\',1)">+</button>' +
+        '</div>' +
+        '<div class="cart-item-total">₹' + lineTotal + '</div>' +
+        '<button type="button" class="cart-remove" onclick="removeFromCart(\'' + name + '\')">&times;</button>' +
+      '</div>';
+  });
+
+  itemsEl.innerHTML = html;
+  subtotalEl.textContent = '₹' + subtotal;
+  badgeEl.textContent = totalQty;
+}
+
+function toggleCart(open){
+  var drawer = document.getElementById('cartDrawer');
+  var overlay = document.getElementById('cartOverlay');
+  if(open){
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+  } else {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+}
+
+var currentCartTotal = 0;
+
+function openCheckout(){
+  var names = Object.keys(cart);
+  if(names.length === 0){ return; }
+  var subtotal = 0;
+  names.forEach(function(name){ subtotal += cart[name].price * cart[name].qty; });
+  currentCartTotal = subtotal;
+  document.getElementById('payAmount').textContent = '₹' + subtotal;
+  document.getElementById('payOverlay').classList.add('open');
+}
+
+function closeCheckout(){
+  document.getElementById('payOverlay').classList.remove('open');
+}
+
+function closeCheckoutOnBg(e){
+  if(e.target.id === 'payOverlay'){ closeCheckout(); }
+}
+
+function completePayment(){
+  var amountInPaise = Math.round(currentCartTotal * 100);
+  var url = 'https://razorpay.me/@mariaenterprises?amount=' + amountInPaise;
+  window.open(url, '_blank');
+  closeCheckout();
+}
 
 // ---- Enquiry modal logic ----
 var enquiryMode = 'retail';
